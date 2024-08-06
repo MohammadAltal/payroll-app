@@ -10,38 +10,41 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { useNavigate } from "react-router-dom";
-import AuthService from "../services/AuthService";
-import Snackbar, { SnackbarOrigin } from '@mui/material/Snackbar';
-
+import { useNavigate } from 'react-router-dom';
+import AuthService from '../services/AuthService';
+import Snackbar from '@mui/material/Snackbar';
 
 const defaultTheme = createTheme();
 
 export default function SignIn() {
     const authService = new AuthService();
-    let navigate = useNavigate();
+    const navigate = useNavigate();
 
     const [snackbarState, setSnackbarState] = useState({
         open: false,
-        vertical: 'top',
-        horizontal: 'right',
-        message: ""
+        message: '',
+        anchorOrigin: { vertical: 'top', horizontal: 'right' },
     });
-    const { vertical, horizontal, open, message } = snackbarState;
-    const handleClose = () => {
-        setSnackbarState({ ...snackbarState, open: false });
+
+    const handleSnackbarClose = () => {
+        setSnackbarState((prev) => ({ ...prev, open: false }));
     };
 
     const handleSubmit = (event) => {
         event.preventDefault();
         const data = new FormData(event.currentTarget);
-        console.log({
-            email: data.get('email'),
-            password: data.get('password'),
-        });
-        const isAuthenticated = authService.loginUser(data.get('email'), data.get('password'));
-        if (!isAuthenticated) {
-            setSnackbarState({ ...snackbarState, open: true, message: "Invalid username/password." });
+        const email = data.get('email');
+        const password = data.get('password');
+        console.log({ email, password });
+
+        if (!authService.loginUser(email, password)) {
+            setSnackbarState({
+                open: true,
+                message: 'Invalid username/password.',
+                anchorOrigin: { vertical: 'top', horizontal: 'right' },
+            });
+        } else {
+            navigate('/home');
         }
     };
 
@@ -94,7 +97,7 @@ export default function SignIn() {
                         </Button>
                         <Grid container>
                             <Grid item>
-                                <Link href="#" variant="body2" onClick={(event) => { navigate("/signup");}}>
+                                <Link href="#" variant="body2" onClick={() => navigate('/signup')}>
                                     {"Don't have an account? Sign Up"}
                                 </Link>
                             </Grid>
@@ -102,11 +105,11 @@ export default function SignIn() {
                     </Box>
                 </Box>
                 <Snackbar
-                    anchorOrigin={{ vertical, horizontal }}
+                    anchorOrigin={snackbarState.anchorOrigin}
                     open={snackbarState.open}
-                    onClose={handleClose}
+                    onClose={handleSnackbarClose}
                     message={snackbarState.message}
-                    key={vertical + horizontal}
+                    key={snackbarState.anchorOrigin.vertical + snackbarState.anchorOrigin.horizontal}
                 />
             </Container>
         </ThemeProvider>

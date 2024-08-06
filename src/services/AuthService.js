@@ -19,7 +19,6 @@ class AuthService {
 
         if (user) {
             localStorage.setItem('user', JSON.stringify(user));
-            window.location.replace('/home');
             return true;
         } else {
             return false;
