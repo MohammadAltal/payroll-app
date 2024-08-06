@@ -13,16 +13,46 @@ class AuthService {
         window.location.replace('/signin');
     };
 
-    loginUser = (username, password) => {
+    loginUser = (email, password) => {
         const users = JSON.parse(localStorage.getItem('users')) || [];
-        const user = users.find(user => user.userName === username && user.password === password);
+        const user = users.find(user => user.email === email && user.password === password);
 
         if (user) {
             localStorage.setItem('user', JSON.stringify(user));
-            return true;
+            return { status: true, message: 'Signin successful.' };
         } else {
-            return false;
+            return { status: false, message: 'Invalid username/password.' };
         }
+    };
+
+    generateUniqueId = () => {
+        return '_' + Math.random().toString(36).substr(2, 9);
+    };
+
+    signupUser = (firstName, lastName, email, password) => {
+        const users = JSON.parse(localStorage.getItem('users')) || [];
+        const userExists = users.some(user => user.email === email);
+
+        if (userExists) {
+            return { status: false, message: 'Email already exists. Please use a different email.' };
+        }
+
+        const newUser = {
+            id: this.generateUniqueId(),
+            firstName,
+            lastName,
+            email,
+            password,
+            creationDate: new Date().toISOString(), // ISO format date
+        };
+
+        users.push(newUser);
+        localStorage.setItem('users', JSON.stringify(users));
+
+        // Optionally, automatically log in the new user
+        localStorage.setItem('user', JSON.stringify(newUser));
+
+        return { status: true, message: 'Signup successful!' };
     };
 
 }

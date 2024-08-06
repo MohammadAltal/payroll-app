@@ -1,30 +1,68 @@
-import * as React from 'react';
-import Avatar from '@mui/material/Avatar';
-import Button from '@mui/material/Button';
-import CssBaseline from '@mui/material/CssBaseline';
-import TextField from '@mui/material/TextField';
-import Link from '@mui/material/Link';
-import Grid from '@mui/material/Grid';
-import Box from '@mui/material/Box';
+import React, { useState } from 'react';
+import {
+    Avatar,
+    Button,
+    CssBaseline,
+    TextField,
+    Link,
+    Grid,
+    Box,
+    Typography,
+    Container,
+    Snackbar,
+    createTheme,
+    ThemeProvider,
+} from '@mui/material';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
-import Typography from '@mui/material/Typography';
-import Container from '@mui/material/Container';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { useNavigate } from "react-router-dom";
-
+import { useNavigate } from 'react-router-dom';
+import AuthService from '../services/AuthService';
 
 const defaultTheme = createTheme();
 
-export default function SignUp() {
+const Signup = () => {
+    const authService = new AuthService();
+    const navigate = useNavigate();
 
-    let navigate = useNavigate();
+    const [formData, setFormData] = useState({
+        firstName: '',
+        lastName: '',
+        email: '',
+        password: '',
+    });
+
+    const [snackbarState, setSnackbarState] = useState({
+        open: false,
+        message: '',
+        anchorOrigin: { vertical: 'top', horizontal: 'right' },
+        autoHideDuration: 3000
+    });
+
+    const handleChange = (event) => {
+        const { name, value } = event.target;
+        setFormData((prevData) => ({ ...prevData, [name]: value }));
+    };
 
     const handleSubmit = (event) => {
         event.preventDefault();
-        const data = new FormData(event.currentTarget);
-        console.log({
-            email: data.get('email'),
-            password: data.get('password'),
+        const { firstName, lastName, email, password } = formData;
+
+        const { status, message } = authService.signupUser(firstName, lastName, email, password);
+
+        if (!status) {
+            setSnackbarState({
+                ...snackbarState,
+                open: true,
+                message
+            });
+        } else {
+            navigate('/home');
+        }
+    };
+
+    const handleCloseSnackbar = () => {
+        setSnackbarState({
+            ...snackbarState,
+            open: false
         });
     };
 
@@ -44,9 +82,9 @@ export default function SignUp() {
                         <LockOutlinedIcon />
                     </Avatar>
                     <Typography component="h1" variant="h5">
-                        Sign up
+                        Sign Up
                     </Typography>
-                    <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
+                    <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 3 }}>
                         <Grid container spacing={2}>
                             <Grid item xs={12} sm={6}>
                                 <TextField
@@ -56,41 +94,49 @@ export default function SignUp() {
                                     fullWidth
                                     id="firstName"
                                     label="First Name"
+                                    value={formData.firstName}
+                                    onChange={handleChange}
                                     autoFocus
                                 />
                             </Grid>
                             <Grid item xs={12} sm={6}>
                                 <TextField
+                                    autoComplete="family-name"
+                                    name="lastName"
                                     required
                                     fullWidth
                                     id="lastName"
                                     label="Last Name"
-                                    name="lastName"
-                                    autoComplete="family-name"
+                                    value={formData.lastName}
+                                    onChange={handleChange}
                                 />
                             </Grid>
                             <Grid item xs={12}>
                                 <TextField
+                                    autoComplete="email"
+                                    name="email"
                                     required
                                     fullWidth
                                     id="email"
                                     label="Email Address"
-                                    name="email"
-                                    autoComplete="email"
+                                    type="email"
+                                    value={formData.email}
+                                    onChange={handleChange}
                                 />
                             </Grid>
                             <Grid item xs={12}>
                                 <TextField
+                                    autoComplete="new-password"
+                                    name="password"
                                     required
                                     fullWidth
-                                    name="password"
+                                    id="password"
                                     label="Password"
                                     type="password"
-                                    id="password"
-                                    autoComplete="new-password"
+                                    value={formData.password}
+                                    onChange={handleChange}
                                 />
                             </Grid>
-
                         </Grid>
                         <Button
                             type="submit"
@@ -102,14 +148,24 @@ export default function SignUp() {
                         </Button>
                         <Grid container justifyContent="flex-end">
                             <Grid item>
-                                <Link href="#" variant="body2" onClick={(event) => { navigate("/signin");}}>
+                                <Link variant="body2" onClick={() => navigate('/signin')}>
                                     Already have an account? Sign in
                                 </Link>
                             </Grid>
                         </Grid>
                     </Box>
                 </Box>
+                <Snackbar
+                    anchorOrigin={snackbarState.anchorOrigin}
+                    open={snackbarState.open}
+                    message={snackbarState.message}
+                    key={`${snackbarState.anchorOrigin.vertical}-${snackbarState.anchorOrigin.horizontal}`}
+                    autoHideDuration={snackbarState.autoHideDuration}
+                    onClose={handleCloseSnackbar}
+                />
             </Container>
         </ThemeProvider>
     );
-}
+};
+
+export default Signup;

@@ -1,7 +1,7 @@
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import SignIn from "./pages/signin";
-import SignUp from "./pages/signup";
-import Home from "./pages/home"; // Import your Home component
+import Signin from "./pages/Signin";
+import Signup from "./pages/Signup";
+import Home from "./pages/Home"; // Import your Home component
 import ProtectedRoute from './routes/ProtectedRoute';
 import PublicRoute from './routes/PublicRoute';
 
@@ -12,8 +12,8 @@ function App() {
                 <Router>
                     <Routes>
                         <Route path="/home" element={<ProtectedRoute element={Home} />} />
-                        <Route path="/signin" element={<PublicRoute element={SignIn} />} />
-                        <Route path="/signup" element={<PublicRoute element={SignUp} />} />
+                        <Route path="/signin" element={<PublicRoute element={Signin} />} />
+                        <Route path="/signup" element={<PublicRoute element={Signup} />} />
                         {/* Add more routes as needed */}
                     </Routes>
                 </Router>

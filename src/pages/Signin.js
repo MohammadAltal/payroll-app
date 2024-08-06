@@ -16,7 +16,7 @@ import Snackbar from '@mui/material/Snackbar';
 
 const defaultTheme = createTheme();
 
-export default function SignIn() {
+export default function Signin() {
     const authService = new AuthService();
     const navigate = useNavigate();
 
@@ -24,28 +24,33 @@ export default function SignIn() {
         open: false,
         message: '',
         anchorOrigin: { vertical: 'top', horizontal: 'right' },
+        autoHideDuration: 3000
     });
-
-    const handleSnackbarClose = () => {
-        setSnackbarState((prev) => ({ ...prev, open: false }));
-    };
 
     const handleSubmit = (event) => {
         event.preventDefault();
         const data = new FormData(event.currentTarget);
         const email = data.get('email');
         const password = data.get('password');
-        console.log({ email, password });
+        const isAuthenticated = authService.loginUser(email, password);
 
-        if (!authService.loginUser(email, password)) {
+        if (!isAuthenticated.status) {
             setSnackbarState({
+                ...snackbarState,
                 open: true,
-                message: 'Invalid username/password.',
-                anchorOrigin: { vertical: 'top', horizontal: 'right' },
+                message: isAuthenticated.message
             });
+
         } else {
             navigate('/home');
         }
+    };
+
+    const handleCloseSnackbar = () => {
+        setSnackbarState({
+            ...snackbarState,
+            open: false
+        });
     };
 
     return (
@@ -97,7 +102,7 @@ export default function SignIn() {
                         </Button>
                         <Grid container>
                             <Grid item>
-                                <Link href="#" variant="body2" onClick={() => navigate('/signup')}>
+                                <Link variant="body2" onClick={() => navigate('/signup')}>
                                     {"Don't have an account? Sign Up"}
                                 </Link>
                             </Grid>
@@ -107,9 +112,10 @@ export default function SignIn() {
                 <Snackbar
                     anchorOrigin={snackbarState.anchorOrigin}
                     open={snackbarState.open}
-                    onClose={handleSnackbarClose}
                     message={snackbarState.message}
                     key={snackbarState.anchorOrigin.vertical + snackbarState.anchorOrigin.horizontal}
+                    autoHideDuration={snackbarState.autoHideDuration}
+                    onClose={handleCloseSnackbar}
                 />
             </Container>
         </ThemeProvider>
