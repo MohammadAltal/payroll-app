@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useState } from 'react';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -11,12 +11,26 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useNavigate } from "react-router-dom";
+import AuthService from "../services/AuthService";
+import Snackbar, { SnackbarOrigin } from '@mui/material/Snackbar';
+
 
 const defaultTheme = createTheme();
 
 export default function SignIn() {
-
+    const authService = new AuthService();
     let navigate = useNavigate();
+
+    const [snackbarState, setSnackbarState] = useState({
+        open: false,
+        vertical: 'top',
+        horizontal: 'right',
+        message: ""
+    });
+    const { vertical, horizontal, open, message } = snackbarState;
+    const handleClose = () => {
+        setSnackbarState({ ...snackbarState, open: false });
+    };
 
     const handleSubmit = (event) => {
         event.preventDefault();
@@ -25,6 +39,10 @@ export default function SignIn() {
             email: data.get('email'),
             password: data.get('password'),
         });
+        const isAuthenticated = authService.loginUser(data.get('email'), data.get('password'));
+        if (!isAuthenticated) {
+            setSnackbarState({ ...snackbarState, open: true, message: "Invalid username/password." });
+        }
     };
 
     return (
@@ -83,6 +101,13 @@ export default function SignIn() {
                         </Grid>
                     </Box>
                 </Box>
+                <Snackbar
+                    anchorOrigin={{ vertical, horizontal }}
+                    open={snackbarState.open}
+                    onClose={handleClose}
+                    message={snackbarState.message}
+                    key={vertical + horizontal}
+                />
             </Container>
         </ThemeProvider>
     );

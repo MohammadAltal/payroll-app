@@ -13,6 +13,19 @@ class AuthService {
         window.location.replace('/signin');
     };
 
+    loginUser = (username, password) => {
+        const users = JSON.parse(localStorage.getItem('users')) || [];
+        const user = users.find(user => user.userName === username && user.password === password);
+
+        if (user) {
+            localStorage.setItem('user', JSON.stringify(user));
+            window.location.replace('/home');
+            return true;
+        } else {
+            return false;
+        }
+    };
+
 }
 
 export default AuthService;
