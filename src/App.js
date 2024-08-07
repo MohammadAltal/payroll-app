@@ -11,6 +11,7 @@ function App() {
             <main>
                 <Router>
                     <Routes>
+                        <Route path="/" element={<ProtectedRoute element={Home} />} />
                         <Route path="/home" element={<ProtectedRoute element={Home} />} />
                         <Route path="/signin" element={<PublicRoute element={Signin} />} />
                         <Route path="/signup" element={<PublicRoute element={Signup} />} />
