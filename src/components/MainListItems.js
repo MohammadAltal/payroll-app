@@ -23,6 +23,13 @@ export default function MainListItems() {
                 </ListItemIcon>
                 <ListItemText primary="Employees" />
             </ListItemButton>
+            <ListItemButton onClick={() => { navigate('/employees/create'); }}>
+                <ListItemIcon>
+                    <PeopleIcon />
+                </ListItemIcon>
+                <ListItemText primary="Add Employee" />
+            </ListItemButton>
+
             <ListItemButton onClick={() => { navigate('/salaries'); }}>
                 <ListItemIcon>
                     <BarChartIcon />
