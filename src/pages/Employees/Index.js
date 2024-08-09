@@ -10,6 +10,15 @@ export default function IndexEmployees() {
     const employeesService = new EmployeesService();
 
     const employees = employeesService.getAllEmployees();
+    const columns = [
+        { id: 'staff_id', label: 'Staff Id', minWidth: 100 },
+        { id: 'first_name', label: 'First Name', minWidth: 100 },
+        { id: 'last_name', label: 'Last Name', minWidth: 100 },
+        { id: 'basic_salary', label: 'Basic Salary', minWidth: 100 },
+        { id: 'salary_allowances', label: 'Salary Allowances', minWidth: 100 },
+        { id: 'joining_date', label: 'Joining Date', minWidth: 100 },
+    ];
+
 
     return (
         <Grid container spacing={2}>
@@ -24,6 +33,7 @@ export default function IndexEmployees() {
                 <Paper sx={{ p: 2, display: 'flex', flexDirection: 'column' }}>
                     <ListEmployees
                         rows={employees}
+                        columns={columns}
                     />
                 </Paper>
             </Grid>

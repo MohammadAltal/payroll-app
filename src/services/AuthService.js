@@ -25,10 +25,6 @@ class AuthService {
         }
     };
 
-    generateUniqueId = () => {
-        return '_' + Math.random().toString(36).substr(2, 9);
-    };
-
     signupUser = (firstName, lastName, email, password) => {
         const users = JSON.parse(localStorage.getItem('users')) || [];
         const userExists = users.some(user => user.email === email);
@@ -38,7 +34,7 @@ class AuthService {
         }
 
         const newUser = {
-            id: this.generateUniqueId(),
+            id: Math.floor(Math.random() * 900000) + 100000,
             firstName,
             lastName,
             email,

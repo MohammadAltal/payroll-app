@@ -1,11 +1,11 @@
 import React from 'react';
 import TableContainer from "@mui/material/TableContainer";
-import Paper from "@mui/material/Paper";
 import Table from "@mui/material/Table";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import TableBody from "@mui/material/TableBody";
 import {styled} from "@mui/material/styles";
+import TablePagination from '@mui/material/TablePagination';
 import TableCell, {tableCellClasses} from "@mui/material/TableCell";
 
 
@@ -29,36 +29,68 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
     },
 }));
 
-function List({ rows }) {
+function List({ columns, rows }) {
+    const [page, setPage] = React.useState(0);
+    const [rowsPerPage, setRowsPerPage] = React.useState(10);
+
+    const handleChangePage = (event, newPage) => {
+        setPage(newPage);
+    };
+
+    const handleChangeRowsPerPage = (event) => {
+        setRowsPerPage(+event.target.value);
+        setPage(0);
+    };
+
     return (
-        <TableContainer component={Paper}>
-            <Table sx={{ minWidth: 700 }} aria-label="customized table">
-                <TableHead>
-                    <TableRow>
-                        <StyledTableCell>Staff Id</StyledTableCell>
-                        <StyledTableCell align="right">First Name</StyledTableCell>
-                        <StyledTableCell align="right">Last Name</StyledTableCell>
-                        <StyledTableCell align="right">Basic Salary</StyledTableCell>
-                        <StyledTableCell align="right">Salary Allowances</StyledTableCell>
-                        <StyledTableCell align="right">Joining Date</StyledTableCell>
-                    </TableRow>
-                </TableHead>
-                <TableBody>
-                    {rows.map((row) => (
-                        <StyledTableRow key={row.name}>
-                            <StyledTableCell component="th" scope="row">
-                                {row.staff_id}
-                            </StyledTableCell>
-                            <StyledTableCell align="right">{row.first_name}</StyledTableCell>
-                            <StyledTableCell align="right">{row.last_name}</StyledTableCell>
-                            <StyledTableCell align="right">{row.basic_salary}</StyledTableCell>
-                            <StyledTableCell align="right">{row.salary_allowances}</StyledTableCell>
-                            <StyledTableCell align="right">{row.joining_date}</StyledTableCell>
-                        </StyledTableRow>
-                    ))}
-                </TableBody>
-            </Table>
-        </TableContainer>
+        <>
+            <TableContainer sx={{ maxHeight: 440 }}>
+                <Table stickyHeader aria-label="sticky table">
+                    <TableHead>
+                        <TableRow>
+                            {columns.map((column) => (
+                                <TableCell
+                                    key={column.id}
+                                    align={column.align}
+                                    style={{ minWidth: column.minWidth }}
+                                >
+                                    {column.label}
+                                </TableCell>
+                            ))}
+                        </TableRow>
+                    </TableHead>
+                    <TableBody>
+                        {rows
+                            .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                            .map((row) => {
+                                return (
+                                    <TableRow hover role="checkbox" tabIndex={-1} key={row.code}>
+                                        {columns.map((column) => {
+                                            const value = row[column.id];
+                                            return (
+                                                <TableCell key={column.id} align={column.align}>
+                                                    {column.format && typeof value === 'number'
+                                                        ? column.format(value)
+                                                        : value}
+                                                </TableCell>
+                                            );
+                                        })}
+                                    </TableRow>
+                                );
+                            })}
+                    </TableBody>
+                </Table>
+            </TableContainer>
+            <TablePagination
+                rowsPerPageOptions={[10, 25, 100]}
+                component="div"
+                count={rows.length}
+                rowsPerPage={rowsPerPage}
+                page={page}
+                onPageChange={handleChangePage}
+                onRowsPerPageChange={handleChangeRowsPerPage}
+            />
+        </>
     );
 }
 
