@@ -3,8 +3,13 @@ import Item from '../../components/Item';
 import Grid from '@mui/material/Grid';
 import EmployeeForm from '../../components/Employee/Form';
 import dayjs from 'dayjs';
+import EmployeesService from '../../services/EmployeesService';
+import {useNavigate} from "react-router-dom"; // Adjust the path as necessary
 
 export default function CreateEmployee() {
+    const employeesService = new EmployeesService();
+    const navigate = useNavigate();
+
     const [formData, setFormData] = React.useState({
         first_name: '',
         last_name: '',
@@ -33,10 +38,16 @@ export default function CreateEmployee() {
         event.preventDefault();
         const formattedJoiningDate = formData.joining_date ? dayjs(formData.joining_date).format('YYYY/MM/DD') : '';
 
-        console.log({
+        // Prepare the employee data
+        const employeeData = {
             ...formData,
-            joining_date: formattedJoiningDate,  // Format the date here
-        });
+            joining_date: formattedJoiningDate,
+        };
+
+        // Save the employee data using the EmployeesService
+        employeesService.saveEmployee(employeeData);
+
+        navigate('/employees');
     };
 
     return (
