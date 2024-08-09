@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import FormLabel from "@mui/material/FormLabel";
 import OutlinedInput from "@mui/material/OutlinedInput";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
@@ -8,38 +8,15 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import Grid from "@mui/material/Grid";
 import Button from "@mui/material/Button";
 import { styled } from "@mui/system";
-import dayjs from 'dayjs';
 
 const FormGrid = styled(Grid)(() => ({
     display: 'flex',
     flexDirection: 'column',
 }));
 
-function Form(props) {
-    const [joiningDate, setJoiningDate] = useState(dayjs());
-
-    const handleSubmit = (event) => {
-        event.preventDefault();
-        const data = new FormData(event.currentTarget);
-        const first_name = data.get('first_name');
-        const last_name = data.get('last_name');
-        const staff_id = data.get('staff_id');
-        const basic_salary = data.get('basic_salary');
-        const salary_allowances = data.get('salary_allowances');
-        const formattedJoiningDate = joiningDate ? dayjs(joiningDate).format('YYYY/MM/DD') : '';
-
-        console.log({
-            'first_name': first_name,
-            'last_name': last_name,
-            'staff_id': staff_id,
-            'joining_date': formattedJoiningDate,  // Include the date here
-            'basic_salary': basic_salary,
-            'salary_allowances': salary_allowances,
-        });
-    };
-
+function Form({ formData, onInputChange, onDateChange, onSubmit }) {
     return (
-        <Grid container spacing={3} component="form" onSubmit={handleSubmit}>
+        <Grid container spacing={3} component="form" onSubmit={onSubmit}>
             <FormGrid item xs={12} md={6}>
                 <FormLabel htmlFor="first_name" required>
                     First Name
@@ -51,6 +28,8 @@ function Form(props) {
                     placeholder="John"
                     autoComplete="first_name"
                     required
+                    value={formData.first_name}
+                    onChange={onInputChange}
                 />
             </FormGrid>
             <FormGrid item xs={12} md={6}>
@@ -64,6 +43,8 @@ function Form(props) {
                     placeholder="Snow"
                     autoComplete="last_name"
                     required
+                    value={formData.last_name}
+                    onChange={onInputChange}
                 />
             </FormGrid>
             <FormGrid item xs={12} md={6}>
@@ -77,6 +58,8 @@ function Form(props) {
                     placeholder="Ex: 2365"
                     autoComplete="staff id"
                     required
+                    value={formData.staff_id}
+                    onChange={onInputChange}
                 />
             </FormGrid>
             <FormGrid item xs={12} md={6}>
@@ -86,8 +69,8 @@ function Form(props) {
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                     <DemoContainer components={['DatePicker']}>
                         <DatePicker
-                            value={joiningDate}
-                            onChange={(newValue) => setJoiningDate(newValue)} // Update state on change
+                            value={formData.joining_date}
+                            onChange={onDateChange} // Use the passed handler
                             renderInput={(params) => <OutlinedInput {...params} />}
                         />
                     </DemoContainer>
@@ -104,6 +87,8 @@ function Form(props) {
                     placeholder=""
                     autoComplete="basic salary"
                     required
+                    value={formData.basic_salary}
+                    onChange={onInputChange}
                 />
             </FormGrid>
             <FormGrid item xs={12} md={6}>
@@ -117,6 +102,8 @@ function Form(props) {
                     placeholder=""
                     autoComplete="salary allowances"
                     required
+                    value={formData.salary_allowances}
+                    onChange={onInputChange}
                 />
             </FormGrid>
             <FormGrid item xs={12} md={12}>
