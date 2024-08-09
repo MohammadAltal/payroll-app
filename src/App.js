@@ -5,7 +5,7 @@ import Layout from "./components/Layout";
 import ProtectedRoute from './routes/ProtectedRoute';
 import PublicRoute from './routes/PublicRoute';
 import CreateEmployee from './pages/Employees/Create';
-import IndexEmployees from './pages/Employees/Index';
+import ListEmployees from './pages/Employees/List';
 
 function App() {
     return (
@@ -13,13 +13,10 @@ function App() {
             <main>
                 <Router>
                     <Routes>
-
-                        <Route path="/employees" element={<Layout><ProtectedRoute element={IndexEmployees} /></Layout>} />
+                        <Route path="/employees" element={<Layout><ProtectedRoute element={ListEmployees} /></Layout>} />
                         <Route path="/employees/create" element={<Layout><ProtectedRoute element={CreateEmployee} /></Layout>} />
-
                         <Route path="/signin" element={<PublicRoute element={Signin} />} />
                         <Route path="/signup" element={<PublicRoute element={Signup} />} />
-                        {/* Add more routes as needed */}
                     </Routes>
                 </Router>
             </main>

@@ -3,10 +3,10 @@ import Grid from '@mui/material/Grid';
 import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
 import Item from '../../components/Item';
-import ListEmployees from '../../components/Employee/List';
+import List from '../../components/Employee/List';
 import EmployeesService from '../../services/EmployeesService';
 
-export default function IndexEmployees() {
+export default function ListEmployees() {
     const employeesService = new EmployeesService();
 
     const employees = employeesService.getAllEmployees();
@@ -19,7 +19,6 @@ export default function IndexEmployees() {
         { id: 'joining_date', label: 'Joining Date', minWidth: 100 },
     ];
 
-
     return (
         <Grid container spacing={2}>
             <Grid item xs={12}>
@@ -31,7 +30,7 @@ export default function IndexEmployees() {
 
             <Grid item xs={12}>
                 <Paper sx={{ p: 2, display: 'flex', flexDirection: 'column' }}>
-                    <ListEmployees
+                    <List
                         rows={employees}
                         columns={columns}
                     />
