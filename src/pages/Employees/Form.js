@@ -4,48 +4,59 @@ import Grid from '@mui/material/Grid';
 import EmployeeForm from '../../components/Employee/Form';
 import dayjs from 'dayjs';
 import EmployeesService from '../../services/EmployeesService';
-import {useNavigate} from "react-router-dom"; // Adjust the path as necessary
+import { useNavigate, useParams } from "react-router-dom";
 
 export default function Form() {
+    const { id } = useParams();
     const employeesService = new EmployeesService();
     const navigate = useNavigate();
 
-    const [formData, setFormData] = React.useState({
+    const initialFormData = {
         first_name: '',
         last_name: '',
         staff_id: '',
         basic_salary: '',
         salary_allowances: '',
-        joining_date: dayjs(),  // Default to today's date
-    });
+        joining_date: dayjs(),
+    };
+
+    const [formData, setFormData] = React.useState(initialFormData);
+
+    const isEditing = Boolean(id && id !== 'create');
+    const action = isEditing ? 'Edit' : 'Add';
+
+    React.useEffect(() => {
+        if (isEditing) {
+            const employee = employeesService.getEmployeeById(id);
+            if (employee) {
+                setFormData({
+                    ...employee,
+                    joining_date: dayjs(employee.joining_date),
+                });
+            }
+        } else {
+            setFormData(initialFormData); // Reset formData to initial state
+        }
+    }, [id, isEditing]);
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
-        setFormData((prevData) => ({
-            ...prevData,
-            [name]: value,
-        }));
+        setFormData(prevData => ({ ...prevData, [name]: value }));
     };
 
     const handleDateChange = (newDate) => {
-        setFormData((prevData) => ({
-            ...prevData,
-            joining_date: newDate,
-        }));
+        setFormData(prevData => ({ ...prevData, joining_date: newDate }));
     };
 
     const handleSubmit = (event) => {
         event.preventDefault();
-        const formattedJoiningDate = formData.joining_date ? dayjs(formData.joining_date).format('YYYY/MM/DD') : '';
+        const formattedJoiningDate = formData.joining_date.format('YYYY/MM/DD');
 
-        // Prepare the employee data
-        const employeeData = {
-            ...formData,
-            joining_date: formattedJoiningDate,
-        };
-
-        // Save the employee data using the EmployeesService
-        employeesService.saveEmployee(employeeData);
+        if (isEditing){
+            employeesService.updateEmployeeById(id,{ ...formData, joining_date: formattedJoiningDate });
+        } else {
+            employeesService.saveEmployee({ ...formData, joining_date: formattedJoiningDate });
+        }
 
         navigate('/employees');
     };
@@ -59,6 +70,7 @@ export default function Form() {
                         onInputChange={handleInputChange}
                         onDateChange={handleDateChange}
                         onSubmit={handleSubmit}
+                        action={action}
                     />
                 </Item>
             </Grid>

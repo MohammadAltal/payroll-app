@@ -11,8 +11,10 @@ import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
+import {useNavigate} from "react-router-dom";
 
 export default function List() {
+    const navigate = useNavigate(); // Initialize useNavigate
     const employeesService = new EmployeesService();
     const [employees, setEmployees] = React.useState([]);
     const [snackbar, setSnackbar] = React.useState({
@@ -47,6 +49,7 @@ export default function List() {
                 variant="outlined"
                 color="success"
                 sx={{ ml: 2}}
+                onClick={() => navigate(`/employees/${id}`)}
             >
                 Edit
             </Button>

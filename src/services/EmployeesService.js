@@ -21,6 +21,8 @@ class EmployeesService {
 
         // Save the updated array back to localStorage
         localStorage.setItem(this.storageKey, JSON.stringify(employees));
+
+        return { status: true, message: 'Employee added successful!' };
     }
 
 
@@ -36,6 +38,21 @@ class EmployeesService {
         localStorage.setItem(this.storageKey, JSON.stringify(employees));
     }
 
+    getEmployeeById(id) {
+        const employees = this.getAllEmployees();
+        return employees.find(employee => employee.id == id);
+    }
+
+    updateEmployeeById(id, updatedEmployee) {
+        const employees = this.getAllEmployees();
+        const updatedEmployees = employees.map(employee =>
+            employee.id == id ? { ...employee, ...updatedEmployee } : employee
+        );
+
+        localStorage.setItem('employees', JSON.stringify(updatedEmployees));
+
+        return { status: true, message: 'Employee updated successful!' };
+    }
 }
 
 export default EmployeesService;

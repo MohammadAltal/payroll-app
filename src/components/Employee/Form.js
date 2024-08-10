@@ -14,7 +14,7 @@ const FormGrid = styled(Grid)(() => ({
     flexDirection: 'column',
 }));
 
-function Form({ formData, onInputChange, onDateChange, onSubmit }) {
+function Form({ formData, onInputChange, onDateChange, onSubmit, action }) {
     return (
         <Grid container spacing={3} component="form" onSubmit={onSubmit}>
             <FormGrid item xs={12} md={6}>
@@ -114,7 +114,7 @@ function Form({ formData, onInputChange, onDateChange, onSubmit }) {
                         sx={{ pr: 5, pl: 5 }}
                         type="submit"
                     >
-                        Save
+                        {action === 'Add' ? 'Save' : 'Update'}
                     </Button>
                 </Grid>
             </FormGrid>

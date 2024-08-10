@@ -5,7 +5,7 @@ import Signup from "./pages/Signup";
 import Layout from "./components/Layout";
 import ProtectedRoute from './routes/ProtectedRoute';
 import PublicRoute from './routes/PublicRoute';
-import CreateEmployee from './pages/Employees/Form';
+import EmployeeForm from './pages/Employees/Form';
 import ListEmployees from './pages/Employees/List';
 import SalariesOverview from './pages/Salaries/Overview';
 import ListPayments from './pages/Salaries/ListPayments';
@@ -36,7 +36,8 @@ function App() {
                         {redirectPath && <Route path="/" element={<Navigate to={redirectPath} />} />}
                         <Route path="/home" element={<Layout><ProtectedRoute element={Home} /></Layout>} />
                         <Route path="/employees" element={<Layout><ProtectedRoute element={ListEmployees} /></Layout>} />
-                        <Route path="/employees/create" element={<Layout><ProtectedRoute element={CreateEmployee} /></Layout>} />
+                        <Route path="/employees/create" element={<Layout><ProtectedRoute element={EmployeeForm} /></Layout>} />
+                        <Route path="/employees/:id" element={<Layout><ProtectedRoute element={EmployeeForm} /></Layout>} />
                         <Route path="/salaries" element={<Layout><ProtectedRoute element={SalariesOverview} /></Layout>} />
                         <Route path="/salaries/payments" element={<Layout><ProtectedRoute element={ListPayments} /></Layout>} />
                         <Route path="/signin" element={<PublicRoute element={Signin} />} />
