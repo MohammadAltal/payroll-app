@@ -44,16 +44,26 @@ const NavigationItem = ({ icon, primary, onClick, endIcon, selected }) => (
     </ListItemButton>
 );
 
-const CollapsibleList = ({ title, items, isOpen, onToggle, navigate, location, icon }) => (
-    <>
-        {items.length > 0 ? (
-            <>
-                <NavigationItem
-                    icon={icon}
-                    primary={title}
-                    onClick={onToggle}
-                    endIcon={isOpen ? <ExpandLess /> : <ExpandMore />}
-                />
+const CollapsibleList = ({ title, items, isOpen, onToggle, navigate, location, icon, path }) => {
+    const handleClick = () => {
+        if (items.length === 0) {
+            // Navigate to the path if no subItems
+            navigate(path);
+        } else {
+            onToggle(); // Toggle collapse if subItems are present
+        }
+    };
+
+    return (
+        <>
+            <NavigationItem
+                icon={icon}
+                primary={title}
+                onClick={handleClick}
+                endIcon={items.length > 0 ? (isOpen ? <ExpandLess /> : <ExpandMore />) : null}
+                selected={location.pathname.startsWith(path)}
+            />
+            {items.length > 0 && (
                 <Collapse in={isOpen} timeout="auto" unmountOnExit>
                     <List component="div" disablePadding>
                         {items.map((item, index) => (
@@ -67,17 +77,10 @@ const CollapsibleList = ({ title, items, isOpen, onToggle, navigate, location, i
                         ))}
                     </List>
                 </Collapse>
-            </>
-        ) : (
-            <NavigationItem
-                icon={icon}
-                primary={title}
-                onClick={() => navigate(items[0]?.path || '/')} // Optionally, handle navigation if needed
-                selected={location.pathname === items[0]?.path}
-            />
-        )}
-    </>
-);
+            )}
+        </>
+    );
+};
 
 export default function MainListItems() {
     const navigate = useNavigate();
@@ -117,6 +120,7 @@ export default function MainListItems() {
                     navigate={navigate}
                     location={location}
                     icon={section.icon}
+                    path={section.path} // Pass the path directly
                 />
             ))}
         </>
