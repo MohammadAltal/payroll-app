@@ -27,21 +27,30 @@ export default function List() {
         const fetchEmployees = () => {
             const employeesList = employeesService.getAllEmployees().map(employee => ({
                 ...employee,
-                action: createDeleteButton(employee.id),
+                action: createActionButtons(employee.id),
             }));
             setEmployees(employeesList);
         };
         fetchEmployees();
     }, []);
 
-    const createDeleteButton = (id) => (
-        <Button
-            variant="outlined"
-            color="error"
-            onClick={() => openConfirmDialog(id)}
-        >
-            Delete
-        </Button>
+    const createActionButtons = (id) => (
+        <>
+            <Button
+                variant="outlined"
+                color="error"
+                onClick={() => openConfirmDialog(id)}
+            >
+                Delete
+            </Button>
+            <Button
+                variant="outlined"
+                color="success"
+                sx={{ ml: 2}}
+            >
+                Edit
+            </Button>
+        </>
     );
 
     const openConfirmDialog = (id) => {
@@ -55,7 +64,7 @@ export default function List() {
             setEmployees(prevEmployees => {
                 const updatedEmployees = employeesService.getAllEmployees().map(employee => ({
                     ...employee,
-                    action: createDeleteButton(employee.id),
+                    action: createActionButtons(employee.id),
                 }));
                 return updatedEmployees;
             });
