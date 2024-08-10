@@ -31,7 +31,7 @@ export default function Overview() {
         ...employee,
         full_name: employee.first_name + ' ' + employee.last_name,
         total_salary: Number(employee.basic_salary) + Number(employee.salary_allowances),
-        process: (
+        action: (
             <Button
                 variant="contained"
                 color="primary"
@@ -126,7 +126,7 @@ export default function Overview() {
         { id: 'basic_salary', label: 'Basic Salary', minWidth: 100 },
         { id: 'salary_allowances', label: 'Salary Allowances', minWidth: 100 },
         { id: 'total_salary', label: 'Total Salary', minWidth: 100 },
-        { id: 'process', label: 'Process', minWidth: 100 }
+        { id: 'action', label: 'Action', minWidth: 100 }
     ];
 
     return (
