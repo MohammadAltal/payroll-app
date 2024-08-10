@@ -1,9 +1,8 @@
 import * as React from 'react';
 import Grid from '@mui/material/Grid';
 import Paper from '@mui/material/Paper';
-import Typography from '@mui/material/Typography';
-import Button from '@mui/material/Button'; // Import Button component
-import Item from '../../components/Item';
+import Button from '@mui/material/Button';
+import ProcessSalaryModal from '../../components/ProcessSalaryModal';
 import DataTable from '../../components/DataTable';
 import EmployeesService from '../../services/EmployeesService';
 
@@ -19,12 +18,28 @@ export default function Overview() {
             <Button
                 variant="contained"
                 color="primary"
-                onClick={() => handleProcess(employee.staff_id)}
+                onClick={() => handleOpenModal()}
             >
                 Process
             </Button>
         ),
     }));
+
+    const [openModal, setOpenModal] = React.useState(false);
+
+    const handleOpenModal = () => {
+        setOpenModal(true);
+    };
+
+    const handleCloseModal = () => {
+        setOpenModal(false);
+    };
+
+    const handleSubmit = () => {
+        // Handle submit logic here
+        console.log('Processing...');
+        setOpenModal(false);
+    };
 
     const columns = [
         { id: 'staff_id', label: 'Staff Id', minWidth: 100 },
@@ -51,6 +66,9 @@ export default function Overview() {
                     />
                 </Paper>
             </Grid>
+
+            <ProcessSalaryModal open={openModal} handleClose={handleCloseModal} onSubmit={handleSubmit} />
+
         </Grid>
     );
 }
