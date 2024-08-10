@@ -32,7 +32,10 @@ const navConfig = [
         title: 'Salaries',
         icon: <BarChartIcon />,
         path: '/salaries',
-        subItems: []
+        subItems: [
+            { text: 'Overview', path: '/salaries' },
+            { text: 'Payment History', path: '/payments/history' }
+        ]
     }
 ];
 
