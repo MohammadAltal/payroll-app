@@ -54,7 +54,7 @@ function Form({ formData, onInputChange, onDateChange, onSubmit, action }) {
                 <OutlinedInput
                     id="staff_id"
                     name="staff_id"
-                    type="text"
+                    type="number"
                     placeholder="Ex: 2365"
                     autoComplete="staff id"
                     required
@@ -83,7 +83,7 @@ function Form({ formData, onInputChange, onDateChange, onSubmit, action }) {
                 <OutlinedInput
                     id="basic_salary"
                     name="basic_salary"
-                    type="text"
+                    type="number"
                     placeholder=""
                     autoComplete="basic salary"
                     required
@@ -98,7 +98,7 @@ function Form({ formData, onInputChange, onDateChange, onSubmit, action }) {
                 <OutlinedInput
                     id="salary_allowances"
                     name="salary_allowances"
-                    type="text"
+                    type="number"
                     placeholder=""
                     autoComplete="salary allowances"
                     required
