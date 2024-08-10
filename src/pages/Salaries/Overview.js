@@ -3,7 +3,7 @@ import Grid from '@mui/material/Grid';
 import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
 import Item from '../../components/Item';
-import List from '../../components/Employee/List';
+import DataTable from '../../components/DataTable';
 
 import EmployeesService from '../../services/EmployeesService';
 
@@ -31,7 +31,7 @@ export default function Overview() {
 
             <Grid item xs={12}>
                 <Paper sx={{ p: 2, display: 'flex', flexDirection: 'column' }}>
-                    <List
+                    <DataTable
                         rows={employees}
                         columns={columns}
                     />
