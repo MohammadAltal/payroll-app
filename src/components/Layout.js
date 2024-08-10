@@ -11,7 +11,7 @@ import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import LogoutIcon from '@mui/icons-material/Logout';
-import MainListItems from './MainListItems';
+import SideBar from './SideBar';
 import Container from '@mui/material/Container';
 import AuthService from '../services/AuthService';
 
@@ -128,7 +128,7 @@ export default function Layout({ children }) {
                     </Toolbar>
                     <Divider />
                     <List component="nav">
-                        <MainListItems />
+                        <SideBar />
                     </List>
                 </Drawer>
                 <Box component="main" sx={{flexGrow: 1, p: 3, height: '100vh', overflow: 'auto'}}>

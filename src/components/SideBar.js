@@ -85,7 +85,7 @@ const CollapsibleList = ({ title, items, isOpen, onToggle, navigate, location, i
     );
 };
 
-export default function MainListItems() {
+export default function SideBar() {
     const navigate = useNavigate();
     const location = useLocation();
     const [openSections, setOpenSections] = React.useState({});
