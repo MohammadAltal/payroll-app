@@ -3,6 +3,7 @@ import Modal from '@mui/material/Modal';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
+import Typography from "@mui/material/Typography";
 
 const style = {
     position: 'absolute',
@@ -15,7 +16,7 @@ const style = {
     p: 4,
 };
 
-export default function ProcessSalaryModal({ open, handleClose, onSubmit, basicSalary, salaryAllowances }) {
+export default function ProcessSalaryModal({ open, handleClose, onSubmit, employee }) {
     return (
         <Modal
             open={open}
@@ -24,12 +25,12 @@ export default function ProcessSalaryModal({ open, handleClose, onSubmit, basicS
             aria-describedby="process-modal-description"
         >
             <Box sx={style}>
-                <h2 id="process-modal-title">Process Employee</h2>
+                <Typography variant="h6">Process Salary Employee #{ employee.staff_id }</Typography>
                 <TextField
                     fullWidth
                     label="Basic Salary"
                     margin="normal"
-                    value={basicSalary}
+                    value={employee.basic_salary}
                     InputProps={{
                         readOnly: true,
                     }}
@@ -38,7 +39,7 @@ export default function ProcessSalaryModal({ open, handleClose, onSubmit, basicS
                     fullWidth
                     label="Salary Allowances"
                     margin="normal"
-                    value={salaryAllowances}
+                    value={employee.salary_allowances}
                     InputProps={{
                         readOnly: true,
                     }}

@@ -69,8 +69,7 @@ export default function Overview() {
                     open={openModal}
                     handleClose={handleCloseModal}
                     onSubmit={handleSubmit}
-                    basicSalary={selectedEmployee.basic_salary}
-                    salaryAllowances={selectedEmployee.salary_allowances}
+                    employee={selectedEmployee}
                 />
             )}
         </Grid>
