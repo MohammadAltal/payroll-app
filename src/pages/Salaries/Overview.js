@@ -15,6 +15,7 @@ export default function Overview() {
     const [snackbar, setSnackbar] = useState({
         open: false,
         message: '',
+        anchorOrigin: { vertical: 'top', horizontal: 'center' },
         autoHideDuration: 5000
     });
 
@@ -104,11 +105,13 @@ export default function Overview() {
 
         const result = salariesService.savePayment(newPayment);
 
-        setSnackbar({
+        setSnackbar(prev => ({
+            ...prev,
             open: true,
             message: result.message,
             autoHideDuration: 5000
-        });
+        }));
+
 
         if (result.success) {
             handleCloseModal();
@@ -150,6 +153,7 @@ export default function Overview() {
                 open={snackbar.open}
                 message={snackbar.message}
                 autoHideDuration={snackbar.autoHideDuration}
+                anchorOrigin={snackbar.anchorOrigin}
                 onClose={() => setSnackbar(prev => ({ ...prev, open: false }))}
             />
         </Grid>
