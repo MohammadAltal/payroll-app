@@ -7,6 +7,9 @@ class EmployeesService {
 
     // Method to save employee data
     saveEmployee(employeeData) {
+        if (this.getEmployeeByStaffId(employeeData.staff_id)){
+            return { status: false, message: 'Staff ID already used!' };
+        }
 
         const newEmployee = {
             ...employeeData,
@@ -41,6 +44,11 @@ class EmployeesService {
     getEmployeeById(id) {
         const employees = this.getAllEmployees();
         return employees.find(employee => employee.id == id);
+    }
+
+    getEmployeeByStaffId(staffId) {
+        const employees = this.getAllEmployees();
+        return employees.find(employee => employee.staff_id == staffId);
     }
 
     updateEmployeeById(id, updatedEmployee) {

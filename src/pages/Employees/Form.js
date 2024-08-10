@@ -5,11 +5,18 @@ import EmployeeForm from '../../components/Employee/Form';
 import dayjs from 'dayjs';
 import EmployeesService from '../../services/EmployeesService';
 import { useNavigate, useParams } from "react-router-dom";
+import Snackbar from "@mui/material/Snackbar";
 
 export default function Form() {
     const { id } = useParams();
     const employeesService = new EmployeesService();
     const navigate = useNavigate();
+    const [snackbar, setSnackbar] = React.useState({
+        open: false,
+        message: '',
+        anchorOrigin: { vertical: 'top', horizontal: 'center' },
+        autoHideDuration: 5000
+    });
 
     const initialFormData = {
         first_name: '',
@@ -55,11 +62,28 @@ export default function Form() {
         if (isEditing){
             employeesService.updateEmployeeById(id,{ ...formData, joining_date: formattedJoiningDate });
         } else {
-            employeesService.saveEmployee({ ...formData, joining_date: formattedJoiningDate });
+           const  addedEmployee = employeesService.saveEmployee({ ...formData, joining_date: formattedJoiningDate });
+
+           if (!addedEmployee.status){
+               setSnackbar(prev => ({
+                   ...prev,
+                   open: true,
+                   message: addedEmployee.message,
+                   autoHideDuration: 5000
+               }));
+
+               return;
+           }
         }
+
 
         navigate('/employees');
     };
+
+    const handleCloseSnackbar = () => {
+        setSnackbar(prev => ({ ...prev, open: false }));
+    };
+
 
     return (
         <Grid container spacing={3}>
@@ -74,6 +98,14 @@ export default function Form() {
                     />
                 </Item>
             </Grid>
+
+            <Snackbar
+                open={snackbar.open}
+                message={snackbar.message}
+                autoHideDuration={snackbar.autoHideDuration}
+                anchorOrigin={snackbar.anchorOrigin}
+                onClose={handleCloseSnackbar}
+            />
         </Grid>
     );
 }
