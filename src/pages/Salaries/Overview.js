@@ -87,7 +87,7 @@ export default function Overview() {
             staff_id: selectedEmployee.staff_id,
             full_name: selectedEmployee.first_name + ' ' + selectedEmployee.last_name,
             basic_salary: selectedEmployee.basic_salary,
-            allowance_salary: selectedEmployee.salary_allowances,
+            salary_allowances: selectedEmployee.salary_allowances,
             additions: formData.additions,
             deductions: formData.deductions,
             total: total.toFixed(2),

@@ -34,7 +34,7 @@ const navConfig = [
         path: '/salaries',
         subItems: [
             { text: 'Overview', path: '/salaries' },
-            { text: 'Payment History', path: '/payments/history' }
+            { text: 'Payment History', path: '/salaries/payments' }
         ]
     }
 ];
