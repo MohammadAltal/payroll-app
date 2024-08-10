@@ -54,7 +54,7 @@ export default function ProcessSalaryModal({ open, handleClose, onSubmit, onInpu
         >
             <Box sx={style}>
                 <Typography variant="h6" sx={{ mb: 2 }}>
-                    Process Salary Employee #{employee.staff_id}
+                    Process Salary [ Employee #{employee.staff_id} ]
                 </Typography>
                 <Grid container spacing={2}  component="form" onSubmit={onSubmit}> {/* Reduced spacing */}
                     <FormGrid item xs={12} md={6} sx={{ marginBottom: '-25px'}}>
@@ -152,7 +152,7 @@ export default function ProcessSalaryModal({ open, handleClose, onSubmit, onInpu
                     </FormGrid>
                     <FormGrid item xs={12}>
                         <Typography variant="h6">
-                            Summary: {calculateSummary()}
+                            Total Salary: {calculateSummary()}
                         </Typography>
                     </FormGrid>
 

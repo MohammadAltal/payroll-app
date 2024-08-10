@@ -68,6 +68,13 @@ export default function Overview() {
 
     const handleOpenModal = (employee) => {
         setSelectedEmployee(employee);
+        setFormData({
+            additions: '',
+            deductions: '',
+            notes: '',
+            month: months[new Date().getMonth()],
+            year: new Date().getFullYear()
+        });
         setOpenModal(true);
     };
 
