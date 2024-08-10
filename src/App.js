@@ -8,6 +8,7 @@ import CreateEmployee from './pages/Employees/Create';
 import ListEmployees from './pages/Employees/List';
 import SalariesOverview from './pages/Salaries/Overview';
 import ListPayments from './pages/Salaries/ListPayments';
+import Home from "./pages/Home";
 
 
 function App() {
@@ -16,6 +17,7 @@ function App() {
             <main>
                 <Router>
                     <Routes>
+                        <Route path="/home" element={<Layout><ProtectedRoute element={Home} /></Layout>} />
                         <Route path="/employees" element={<Layout><ProtectedRoute element={ListEmployees} /></Layout>} />
                         <Route path="/employees/create" element={<Layout><ProtectedRoute element={CreateEmployee} /></Layout>} />
                         <Route path="/salaries" element={<Layout><ProtectedRoute element={SalariesOverview} /></Layout>} />

@@ -14,9 +14,9 @@ import List from '@mui/material/List';
 // Configuration for navigation items
 const navConfig = [
     {
-        title: 'Dashboard',
+        title: 'Home',
         icon: <DashboardIcon />,
-        path: '/dashboard',
+        path: '/home',
         subItems: []
     },
     {
