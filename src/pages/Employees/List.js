@@ -6,11 +6,23 @@ import Item from '../../components/Item';
 import DataTable from '../../components/DataTable';
 
 import EmployeesService from '../../services/EmployeesService';
+import Button from "@mui/material/Button";
 
 export default function ListEmployees() {
     const employeesService = new EmployeesService();
 
-    const employees = employeesService.getAllEmployees();
+    const employees = employeesService.getAllEmployees().map(employee => ({
+        ...employee,
+        action: (
+            <Button
+                variant="outlined"
+                color="error"
+            >
+                Delete
+            </Button>
+        ),
+    }));
+
     const columns = [
         { id: 'staff_id', label: 'Staff Id', minWidth: 100 },
         { id: 'first_name', label: 'First Name', minWidth: 100 },
@@ -18,6 +30,7 @@ export default function ListEmployees() {
         { id: 'basic_salary', label: 'Basic Salary', minWidth: 100 },
         { id: 'salary_allowances', label: 'Salary Allowances', minWidth: 100 },
         { id: 'joining_date', label: 'Joining Date', minWidth: 100 },
+        { id: 'action', label: 'Action', minWidth: 100 }
     ];
 
     return (
