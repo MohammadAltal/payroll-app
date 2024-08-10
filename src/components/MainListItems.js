@@ -24,7 +24,7 @@ const navConfig = [
         icon: <PeopleIcon />,
         path: '/employees',
         subItems: [
-            { text: 'List', path: '/employees' },
+            { text: 'Overview', path: '/employees' },
             { text: 'Create', path: '/employees/create' }
         ]
     },
@@ -61,7 +61,7 @@ const CollapsibleList = ({ title, items, isOpen, onToggle, navigate, location, i
                 primary={title}
                 onClick={handleClick}
                 endIcon={items.length > 0 ? (isOpen ? <ExpandLess /> : <ExpandMore />) : null}
-                selected={location.pathname.startsWith(path)}
+                selected={items.length > 0 ? false : location.pathname.startsWith(path)}
             />
             {items.length > 0 && (
                 <Collapse in={isOpen} timeout="auto" unmountOnExit>
