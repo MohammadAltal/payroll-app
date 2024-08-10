@@ -12,13 +12,13 @@ export default function Overview() {
     // Get employees and add total_salary and process column data
     const employees = employeesService.getAllEmployees().map(employee => ({
         ...employee,
-        full_name: employee.first_name + ' ' +  employee.last_name, // Convert to numbers before adding
-        total_salary: Number(employee.basic_salary) + Number(employee.salary_allowances), // Convert to numbers before adding
+        full_name: employee.first_name + ' ' + employee.last_name,
+        total_salary: Number(employee.basic_salary) + Number(employee.salary_allowances),
         process: (
             <Button
                 variant="contained"
                 color="primary"
-                onClick={() => handleOpenModal()}
+                onClick={() => handleOpenModal(employee)}
             >
                 Process
             </Button>
@@ -26,18 +26,21 @@ export default function Overview() {
     }));
 
     const [openModal, setOpenModal] = React.useState(false);
+    const [selectedEmployee, setSelectedEmployee] = React.useState(null);
 
-    const handleOpenModal = () => {
+    const handleOpenModal = (employee) => {
+        setSelectedEmployee(employee);
         setOpenModal(true);
     };
 
     const handleCloseModal = () => {
         setOpenModal(false);
+        setSelectedEmployee(null);
     };
 
     const handleSubmit = () => {
         // Handle submit logic here
-        console.log('Processing...');
+        console.log('Processing...', selectedEmployee);
         setOpenModal(false);
     };
 
@@ -46,18 +49,12 @@ export default function Overview() {
         { id: 'full_name', label: 'Full Name', minWidth: 100 },
         { id: 'basic_salary', label: 'Basic Salary', minWidth: 100 },
         { id: 'salary_allowances', label: 'Salary Allowances', minWidth: 100 },
-        { id: 'total_salary', label: 'Total Salary', minWidth: 100 }, // Add Total Salary column
-        { id: 'process', label: 'Process', minWidth: 100 } // Add Process column
+        { id: 'total_salary', label: 'Total Salary', minWidth: 100 },
+        { id: 'process', label: 'Process', minWidth: 100 }
     ];
-
-    const handleProcess = (staffId) => {
-        // Handle process action here
-        console.log(`Processing employee with staff ID: ${staffId}`);
-    };
 
     return (
         <Grid container spacing={2}>
-
             <Grid item xs={12}>
                 <Paper sx={{ p: 2, display: 'flex', flexDirection: 'column' }}>
                     <DataTable
@@ -67,8 +64,15 @@ export default function Overview() {
                 </Paper>
             </Grid>
 
-            <ProcessSalaryModal open={openModal} handleClose={handleCloseModal} onSubmit={handleSubmit} />
-
+            {selectedEmployee && (
+                <ProcessSalaryModal
+                    open={openModal}
+                    handleClose={handleCloseModal}
+                    onSubmit={handleSubmit}
+                    basicSalary={selectedEmployee.basic_salary}
+                    salaryAllowances={selectedEmployee.salary_allowances}
+                />
+            )}
         </Grid>
     );
 }

@@ -15,7 +15,7 @@ const style = {
     p: 4,
 };
 
-export default function ProcessSalaryModal({ open, handleClose, onSubmit }) {
+export default function ProcessSalaryModal({ open, handleClose, onSubmit, basicSalary, salaryAllowances }) {
     return (
         <Modal
             open={open}
@@ -25,8 +25,24 @@ export default function ProcessSalaryModal({ open, handleClose, onSubmit }) {
         >
             <Box sx={style}>
                 <h2 id="process-modal-title">Process Employee</h2>
-                <TextField fullWidth label="Field 1" margin="normal" />
-                <TextField fullWidth label="Field 2" margin="normal" />
+                <TextField
+                    fullWidth
+                    label="Basic Salary"
+                    margin="normal"
+                    value={basicSalary}
+                    InputProps={{
+                        readOnly: true,
+                    }}
+                />
+                <TextField
+                    fullWidth
+                    label="Salary Allowances"
+                    margin="normal"
+                    value={salaryAllowances}
+                    InputProps={{
+                        readOnly: true,
+                    }}
+                />
                 <Button variant="contained" color="primary" onClick={onSubmit} sx={{ mt: 2 }}>
                     Submit
                 </Button>
