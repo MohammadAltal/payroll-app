@@ -9,6 +9,7 @@ import ListEmployees from './pages/Employees/List';
 import SalariesOverview from './pages/Salaries/Overview';
 import ListPayments from './pages/Salaries/ListPayments';
 import Home from "./pages/Home";
+import PageNotFound from "./pages/PageNotFound";
 
 
 function App() {
@@ -24,6 +25,7 @@ function App() {
                         <Route path="/salaries/payments" element={<Layout><ProtectedRoute element={ListPayments} /></Layout>} />
                         <Route path="/signin" element={<PublicRoute element={Signin} />} />
                         <Route path="/signup" element={<PublicRoute element={Signup} />} />
+                        <Route path="*" element={<PageNotFound />} />
                     </Routes>
                 </Router>
             </main>
