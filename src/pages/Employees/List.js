@@ -4,10 +4,13 @@ import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
 import Item from '../../components/Item';
 import DataTable from '../../components/DataTable';
-
 import EmployeesService from '../../services/EmployeesService';
 import Button from "@mui/material/Button";
 import Snackbar from "@mui/material/Snackbar";
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogTitle from '@mui/material/DialogTitle';
 
 export default function ListEmployees() {
     const employeesService = new EmployeesService();
@@ -17,6 +20,8 @@ export default function ListEmployees() {
         message: '',
         autoHideDuration: 5000
     });
+    const [dialogOpen, setDialogOpen] = React.useState(false);
+    const [employeeToDelete, setEmployeeToDelete] = React.useState(null);
 
     React.useEffect(() => {
         const fetchEmployees = () => {
@@ -33,25 +38,40 @@ export default function ListEmployees() {
         <Button
             variant="outlined"
             color="error"
-            onClick={() => handleDelete(id)}
+            onClick={() => openConfirmDialog(id)}
         >
             Delete
         </Button>
     );
 
-    const handleDelete = (id) => {
-        employeesService.deleteEmployee(id);
-        setEmployees(prevEmployees => {
-            return employeesService.getAllEmployees().map(employee => ({
-                ...employee,
-                action: createDeleteButton(employee.id),
-            }));
-        });
-        setSnackbar({
-            open: true,
-            message: 'Employee deleted successfully',
-            autoHideDuration: 5000
-        });
+    const openConfirmDialog = (id) => {
+        setEmployeeToDelete(id);
+        setDialogOpen(true);
+    };
+
+    const handleConfirmDelete = () => {
+        if (employeeToDelete) {
+            employeesService.deleteEmployee(employeeToDelete);
+            setEmployees(prevEmployees => {
+                const updatedEmployees = employeesService.getAllEmployees().map(employee => ({
+                    ...employee,
+                    action: createDeleteButton(employee.id),
+                }));
+                return updatedEmployees;
+            });
+            setSnackbar({
+                open: true,
+                message: 'Employee deleted successfully',
+                autoHideDuration: 5000
+            });
+            setEmployeeToDelete(null);
+        }
+        setDialogOpen(false);
+    };
+
+    const handleCancelDelete = () => {
+        setEmployeeToDelete(null);
+        setDialogOpen(false);
     };
 
     const handleCloseSnackbar = () => {
@@ -92,6 +112,24 @@ export default function ListEmployees() {
                 autoHideDuration={snackbar.autoHideDuration}
                 onClose={handleCloseSnackbar}
             />
+
+            <Dialog
+                open={dialogOpen}
+                onClose={handleCancelDelete}
+            >
+                <DialogTitle>Confirm Delete</DialogTitle>
+                <DialogContent>
+                    Are you sure you want to delete this employee?
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleCancelDelete} color="primary">
+                        Cancel
+                    </Button>
+                    <Button onClick={handleConfirmDelete} color="secondary">
+                        Delete
+                    </Button>
+                </DialogActions>
+            </Dialog>
         </Grid>
     );
 }
