@@ -29,6 +29,13 @@ class EmployeesService {
         return JSON.parse(localStorage.getItem(this.storageKey)) || [];
     }
 
+    // Method to delete an employee by ID
+    deleteEmployee(employeeId) {
+        let employees = JSON.parse(localStorage.getItem(this.storageKey)) || [];
+        employees = employees.filter(employee => employee.id !== employeeId);
+        localStorage.setItem(this.storageKey, JSON.stringify(employees));
+    }
+
 }
 
 export default EmployeesService;

@@ -7,21 +7,56 @@ import DataTable from '../../components/DataTable';
 
 import EmployeesService from '../../services/EmployeesService';
 import Button from "@mui/material/Button";
+import Snackbar from "@mui/material/Snackbar";
 
 export default function ListEmployees() {
     const employeesService = new EmployeesService();
+    const [employees, setEmployees] = React.useState([]);
+    const [snackbar, setSnackbar] = React.useState({
+        open: false,
+        message: '',
+        autoHideDuration: 5000
+    });
 
-    const employees = employeesService.getAllEmployees().map(employee => ({
-        ...employee,
-        action: (
-            <Button
-                variant="outlined"
-                color="error"
-            >
-                Delete
-            </Button>
-        ),
-    }));
+    React.useEffect(() => {
+        const fetchEmployees = () => {
+            const employeesList = employeesService.getAllEmployees().map(employee => ({
+                ...employee,
+                action: createDeleteButton(employee.id),
+            }));
+            setEmployees(employeesList);
+        };
+        fetchEmployees();
+    }, []);
+
+    const createDeleteButton = (id) => (
+        <Button
+            variant="outlined"
+            color="error"
+            onClick={() => handleDelete(id)}
+        >
+            Delete
+        </Button>
+    );
+
+    const handleDelete = (id) => {
+        employeesService.deleteEmployee(id);
+        setEmployees(prevEmployees => {
+            return employeesService.getAllEmployees().map(employee => ({
+                ...employee,
+                action: createDeleteButton(employee.id),
+            }));
+        });
+        setSnackbar({
+            open: true,
+            message: 'Employee deleted successfully',
+            autoHideDuration: 5000
+        });
+    };
+
+    const handleCloseSnackbar = () => {
+        setSnackbar(prev => ({ ...prev, open: false }));
+    };
 
     const columns = [
         { id: 'staff_id', label: 'Staff Id', minWidth: 100 },
@@ -37,7 +72,7 @@ export default function ListEmployees() {
         <Grid container spacing={2}>
             <Grid item xs={12}>
                 <Item>
-                    <Typography variant="h3">{ employees.length }</Typography>
+                    <Typography variant="h3">{employees.length}</Typography>
                     <Typography variant="subtitle2">Employees</Typography>
                 </Item>
             </Grid>
@@ -50,7 +85,13 @@ export default function ListEmployees() {
                     />
                 </Paper>
             </Grid>
+
+            <Snackbar
+                open={snackbar.open}
+                message={snackbar.message}
+                autoHideDuration={snackbar.autoHideDuration}
+                onClose={handleCloseSnackbar}
+            />
         </Grid>
     );
 }
-
