@@ -28,7 +28,7 @@ const FormGrid = styled(Grid)(() => ({
     flexDirection: 'column',
 }));
 
-export default function ProcessSalaryModal({ open, handleClose, onSubmit, employee }) {
+export default function ProcessSalaryModal({ open, handleClose, onSubmit, onInputChange, employee, formData }) {
     const currentYear = new Date().getFullYear();
     const years = Array.from(new Array(10), (val, index) => currentYear - index);
     const months = [
@@ -36,15 +36,12 @@ export default function ProcessSalaryModal({ open, handleClose, onSubmit, employ
         'July', 'August', 'September', 'October', 'November', 'December'
     ];
 
-    const [additions, setAdditions] = useState('');
-    const [deductions, setDeductions] = useState('');
-    const [notes, setNotes] = useState('');
 
     const calculateSummary = () => {
         const basicSalary = Number(employee.basic_salary) || 0;
         const salaryAllowances = Number(employee.salary_allowances) || 0;
-        const additionsAmount = parseFloat(additions) || 0;
-        const deductionsAmount = parseFloat(deductions) || 0;
+        const additionsAmount = parseFloat(formData.additions) || 0;
+        const deductionsAmount = parseFloat(formData.deductions) || 0;
 
         return (basicSalary + salaryAllowances + additionsAmount - deductionsAmount).toFixed(2);
     };
@@ -60,12 +57,13 @@ export default function ProcessSalaryModal({ open, handleClose, onSubmit, employ
                 <Typography variant="h6" sx={{ mb: 2 }}>
                     Process Salary Employee #{employee.staff_id}
                 </Typography>
-                <Grid container spacing={2} component="form"> {/* Reduced spacing */}
+                <Grid container spacing={2}  component="form" onSubmit={onSubmit}> {/* Reduced spacing */}
                     <FormGrid item xs={12} md={6} sx={{ marginBottom: '-25px'}}>
                         <TextField
                             fullWidth
                             label="Basic Salary"
                             margin="normal"
+                            name="basic_salary"
                             value={employee.basic_salary}
                             InputProps={{
                                 readOnly: true,
@@ -76,6 +74,7 @@ export default function ProcessSalaryModal({ open, handleClose, onSubmit, employ
                         <TextField
                             fullWidth
                             label="Salary Allowances"
+                            name="salary_allowances"
                             margin="normal"
                             value={employee.salary_allowances}
                             InputProps={{
@@ -87,18 +86,20 @@ export default function ProcessSalaryModal({ open, handleClose, onSubmit, employ
                         <TextField
                             fullWidth
                             label="Additions"
+                            name="additions"
                             margin="normal"
-                            value={additions}
-                            onChange={(e) => setAdditions(e.target.value)}
+                            value={formData.additions}
+                            onChange={onInputChange}
                         />
                     </FormGrid>
                     <FormGrid item xs={12} md={6} sx={{ marginBottom: '-25px'}}>
                         <TextField
                             fullWidth
                             label="Deductions"
+                            name="deductions"
                             margin="normal"
-                            value={deductions}
-                            onChange={(e) => setDeductions(e.target.value)}
+                            value={formData.deductions}
+                            onChange={onInputChange}
                         />
                     </FormGrid>
                     <FormGrid item xs={12} md={6} sx={{ marginBottom: '-25px'}}>
@@ -106,7 +107,9 @@ export default function ProcessSalaryModal({ open, handleClose, onSubmit, employ
                             <InputLabel>Year</InputLabel>
                             <Select
                                 label="Year"
-                                defaultValue={currentYear}
+                                name="year"
+                                value={formData.year}
+                                onChange={onInputChange}
                             >
                                 {years.map(year => (
                                     <MenuItem key={year} value={year}>
@@ -121,7 +124,9 @@ export default function ProcessSalaryModal({ open, handleClose, onSubmit, employ
                             <InputLabel>Month</InputLabel>
                             <Select
                                 label="Month"
-                                defaultValue={months[new Date().getMonth()]}
+                                name="month"
+                                value={formData.month}
+                                onChange={onInputChange}
                             >
                                 {months.map((month, index) => (
                                     <MenuItem key={index} value={month}>
@@ -138,8 +143,9 @@ export default function ProcessSalaryModal({ open, handleClose, onSubmit, employ
                             rows={4}
                             label="Notes"
                             margin="normal"
-                            value={notes}
-                            onChange={(e) => setNotes(e.target.value)}
+                            name="notes"
+                            value={formData.notes}
+                            onChange={onInputChange}
                         />
                     </FormGrid>
                     <FormGrid item xs={12}  sx={{ marginBottom: '-20px'}}>
@@ -159,6 +165,7 @@ export default function ProcessSalaryModal({ open, handleClose, onSubmit, employ
                                 color="primary"
                                 onClick={onSubmit}
                                 sx={{ pr: 5, pl: 5 }}
+                                type="submit"
                             >
                                 Process
                             </Button>

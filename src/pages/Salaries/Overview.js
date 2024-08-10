@@ -5,6 +5,7 @@ import Button from '@mui/material/Button';
 import ProcessSalaryModal from '../../components/ProcessSalaryModal';
 import DataTable from '../../components/DataTable';
 import EmployeesService from '../../services/EmployeesService';
+import dayjs from "dayjs";
 
 export default function Overview() {
     const employeesService = new EmployeesService();
@@ -25,6 +26,27 @@ export default function Overview() {
         ),
     }));
 
+    const months = [
+        'January', 'February', 'March', 'April', 'May', 'June',
+        'July', 'August', 'September', 'October', 'November', 'December'
+    ];
+
+    const [formData, setFormData] = React.useState({
+        additions: '',
+        deductions: '',
+        notes: '',
+        month: months[new Date().getMonth()],
+        year: new Date().getFullYear()
+    });
+
+    const handleInputChange = (e) => {
+        const { name, value } = e.target;
+        setFormData((prevData) => ({
+            ...prevData,
+            [name]: value,
+        }));
+    };
+
     const [openModal, setOpenModal] = React.useState(false);
     const [selectedEmployee, setSelectedEmployee] = React.useState(null);
 
@@ -38,10 +60,12 @@ export default function Overview() {
         setSelectedEmployee(null);
     };
 
-    const handleSubmit = () => {
+    const handleSubmit = (event) => {
+        event.preventDefault();
+
         // Handle submit logic here
-        console.log('Processing...', selectedEmployee);
-        setOpenModal(false);
+        console.log('Processing...', formData);
+       //  setOpenModal(false);
     };
 
     const columns = [
@@ -70,6 +94,8 @@ export default function Overview() {
                     handleClose={handleCloseModal}
                     onSubmit={handleSubmit}
                     employee={selectedEmployee}
+                    onInputChange={handleInputChange}
+                    formData={formData}
                 />
             )}
         </Grid>
