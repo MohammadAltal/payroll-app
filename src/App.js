@@ -5,7 +5,7 @@ import Signup from "./pages/Signup";
 import Layout from "./components/Layout";
 import ProtectedRoute from './routes/ProtectedRoute';
 import PublicRoute from './routes/PublicRoute';
-import CreateEmployee from './pages/Employees/Create';
+import CreateEmployee from './pages/Employees/Form';
 import ListEmployees from './pages/Employees/List';
 import SalariesOverview from './pages/Salaries/Overview';
 import ListPayments from './pages/Salaries/ListPayments';

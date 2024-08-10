@@ -12,7 +12,7 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 
-export default function ListEmployees() {
+export default function List() {
     const employeesService = new EmployeesService();
     const [employees, setEmployees] = React.useState([]);
     const [snackbar, setSnackbar] = React.useState({

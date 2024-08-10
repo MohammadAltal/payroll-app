@@ -6,7 +6,7 @@ import dayjs from 'dayjs';
 import EmployeesService from '../../services/EmployeesService';
 import {useNavigate} from "react-router-dom"; // Adjust the path as necessary
 
-export default function CreateEmployee() {
+export default function Form() {
     const employeesService = new EmployeesService();
     const navigate = useNavigate();
 
