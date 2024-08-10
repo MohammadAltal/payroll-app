@@ -2,7 +2,7 @@ import DashboardIcon from '@mui/icons-material/Dashboard';
 import PeopleIcon from '@mui/icons-material/People';
 import BarChartIcon from '@mui/icons-material/BarChart';
 
-const Routes = [
+const Menu = [
     {
         title: 'Home',
         icon: <DashboardIcon />,
@@ -29,4 +29,4 @@ const Routes = [
     }
 ];
 
-export default Routes;
+export default Menu;

@@ -13,7 +13,7 @@ import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import LogoutIcon from '@mui/icons-material/Logout';
 import SideBar from './SideBar';
 import AuthService from '../services/AuthService';
-import Routes from '../routes/web';
+import Menu from '../routes/Menu';
 
 const drawerWidth = 240;
 
@@ -128,7 +128,7 @@ export default function Layout({ children }) {
                     </Toolbar>
                     <Divider />
                     <List component="nav">
-                        <SideBar routes={Routes} />
+                        <SideBar routes={Menu} />
                     </List>
                 </Drawer>
                 <Box component="main" sx={{flexGrow: 1, p: 3, height: '100vh', overflow: 'auto'}}>
