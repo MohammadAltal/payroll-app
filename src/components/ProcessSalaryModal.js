@@ -36,7 +36,6 @@ export default function ProcessSalaryModal({ open, handleClose, onSubmit, onInpu
         'July', 'August', 'September', 'October', 'November', 'December'
     ];
 
-
     const calculateSummary = () => {
         const basicSalary = Number(employee.basic_salary) || 0;
         const salaryAllowances = Number(employee.salary_allowances) || 0;
