@@ -5,52 +5,120 @@ import ListItemText from '@mui/material/ListItemText';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import PeopleIcon from '@mui/icons-material/People';
 import BarChartIcon from '@mui/icons-material/BarChart';
-import {useNavigate} from "react-router-dom";
+import { useNavigate, useLocation } from 'react-router-dom';
 import Collapse from '@mui/material/Collapse';
 import ExpandLess from '@mui/icons-material/ExpandLess';
 import ExpandMore from '@mui/icons-material/ExpandMore';
 import List from '@mui/material/List';
 
+// Configuration for navigation items
+const navConfig = [
+    {
+        title: 'Dashboard',
+        icon: <DashboardIcon />,
+        path: '/dashboard',
+        subItems: []
+    },
+    {
+        title: 'Employees',
+        icon: <PeopleIcon />,
+        path: '/employees',
+        subItems: [
+            { text: 'List', path: '/employees' },
+            { text: 'Create', path: '/employees/create' }
+        ]
+    },
+    {
+        title: 'Salaries',
+        icon: <BarChartIcon />,
+        path: '/salaries',
+        subItems: []
+    }
+];
+
+const NavigationItem = ({ icon, primary, onClick, endIcon, selected }) => (
+    <ListItemButton onClick={onClick} selected={selected}>
+        <ListItemIcon>{icon}</ListItemIcon>
+        <ListItemText primary={primary} />
+        {endIcon}
+    </ListItemButton>
+);
+
+const CollapsibleList = ({ title, items, isOpen, onToggle, navigate, location, icon }) => (
+    <>
+        {items.length > 0 ? (
+            <>
+                <NavigationItem
+                    icon={icon}
+                    primary={title}
+                    onClick={onToggle}
+                    endIcon={isOpen ? <ExpandLess /> : <ExpandMore />}
+                />
+                <Collapse in={isOpen} timeout="auto" unmountOnExit>
+                    <List component="div" disablePadding>
+                        {items.map((item, index) => (
+                            <NavigationItem
+                                key={index}
+                                sx={{ pl: 4 }}
+                                primary={item.text}
+                                onClick={() => navigate(item.path)}
+                                selected={location.pathname === item.path}
+                            />
+                        ))}
+                    </List>
+                </Collapse>
+            </>
+        ) : (
+            <NavigationItem
+                icon={icon}
+                primary={title}
+                onClick={() => navigate(items[0]?.path || '/')} // Optionally, handle navigation if needed
+                selected={location.pathname === items[0]?.path}
+            />
+        )}
+    </>
+);
+
 export default function MainListItems() {
     const navigate = useNavigate();
-    const [open, setOpen] = React.useState(true);
+    const location = useLocation();
+    const [openSections, setOpenSections] = React.useState({});
 
-    const handleClick = () => {
-        setOpen(!open);
+    // Determine which sections should be open based on the URL path
+    React.useEffect(() => {
+        const path = location.pathname;
+        const updatedSections = {};
+
+        navConfig.forEach(section => {
+            if (path.startsWith(section.path)) {
+                updatedSections[section.title] = true;
+            }
+        });
+
+        setOpenSections(updatedSections);
+    }, [location.pathname]);
+
+    const handleToggle = (title) => {
+        setOpenSections(prev => ({
+            ...prev,
+            [title]: !prev[title]
+        }));
     };
 
     return (
-        <React.Fragment>
-            <ListItemButton onClick={() => { navigate('/dashboard'); }}>
-                <ListItemIcon>
-                    <DashboardIcon />
-                </ListItemIcon>
-                <ListItemText primary="Dashboard" />
-            </ListItemButton>
-            <ListItemButton onClick={handleClick}>
-                <ListItemIcon>
-                    <PeopleIcon />
-                </ListItemIcon>
-                <ListItemText primary="Employees" />
-                {open ? <ExpandLess /> : <ExpandMore />}
-            </ListItemButton>
-            <Collapse in={open} timeout="auto" unmountOnExit>
-                <List component="div" disablePadding>
-                    <ListItemButton sx={{ pl: 4 }}  onClick={() => { navigate('/employees'); }}>
-                        <ListItemText  sx={{ paddingLeft: "40px" }} primary="List" />
-                    </ListItemButton>
-                    <ListItemButton sx={{ pl: 4 }} onClick={() => { navigate('/employees/create'); }}>
-                        <ListItemText  sx={{ paddingLeft: "40px" }} primary="Create" />
-                    </ListItemButton>
-                </List>
-            </Collapse>
-
-            <ListItemButton onClick={() => { navigate('/salaries'); }}>
-                <ListItemIcon>
-                    <BarChartIcon />
-                </ListItemIcon>
-                <ListItemText primary="Salaries" />
-            </ListItemButton>
-        </React.Fragment>
+        <>
+            {navConfig.map(section => (
+                <CollapsibleList
+                    key={section.title}
+                    title={section.title}
+                    items={section.subItems}
+                    isOpen={!!openSections[section.title]}
+                    onToggle={() => handleToggle(section.title)}
+                    navigate={navigate}
+                    location={location}
+                    icon={section.icon}
+                />
+            ))}
+        </>
     );
 }
