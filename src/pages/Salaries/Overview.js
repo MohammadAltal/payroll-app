@@ -4,32 +4,40 @@ import Paper from '@mui/material/Paper';
 import Button from '@mui/material/Button';
 import ProcessSalaryModal from '../../components/ProcessSalaryModal';
 import DataTable from '../../components/DataTable';
-import EmployeesService from '../../services/EmployeesService'
+import EmployeesService from '../../services/EmployeesService';
 import SalariesService from '../../services/SalariesService';
-import Snackbar from "@mui/material/Snackbar"
+import Snackbar from '@mui/material/Snackbar';
 
 export default function Overview() {
     const employeesService = new EmployeesService();
     const salariesService = new SalariesService();
 
-    const [snackbarState, setSnackbarState] = useState({
+    const [snackbar, setSnackbar] = useState({
         open: false,
         message: '',
-        anchorOrigin: { vertical: 'top', horizontal: 'center' },
         autoHideDuration: 5000
     });
 
-    const handleCloseSnackbar = () => {
-        setSnackbarState({
-            ...snackbarState,
-            open: false
-        });
-    };
+    const months = [
+        'January', 'February', 'March', 'April', 'May', 'June',
+        'July', 'August', 'September', 'October', 'November', 'December'
+    ];
 
-    // Get employees and add total_salary and process column data
+    const [modal, setModal] = useState({
+        open: false,
+        employee: null,
+        formData: {
+            additions: '',
+            deductions: '',
+            notes: '',
+            month: months[new Date().getMonth()],
+            year: new Date().getFullYear()
+        }
+    });
+
     const employees = employeesService.getAllEmployees().map(employee => ({
         ...employee,
-        full_name: employee.first_name + ' ' + employee.last_name,
+        full_name: `${employee.first_name} ${employee.last_name}`,
         total_salary: Number(employee.basic_salary) + Number(employee.salary_allowances),
         action: (
             <Button
@@ -42,59 +50,50 @@ export default function Overview() {
         ),
     }));
 
-    const months = [
-        'January', 'February', 'March', 'April', 'May', 'June',
-        'July', 'August', 'September', 'October', 'November', 'December'
-    ];
-
-    const [formData, setFormData] = React.useState({
-        additions: '',
-        deductions: '',
-        notes: '',
-        month: months[new Date().getMonth()],
-        year: new Date().getFullYear()
-    });
-
-    const handleInputChange = (e) => {
-        const { name, value } = e.target;
-        setFormData((prevData) => ({
-            ...prevData,
-            [name]: value,
-        }));
-    };
-
-    const [openModal, setOpenModal] = React.useState(false);
-    const [selectedEmployee, setSelectedEmployee] = React.useState(null);
-
     const handleOpenModal = (employee) => {
-        setSelectedEmployee(employee);
-        setFormData({
-            additions: '',
-            deductions: '',
-            notes: '',
-            month: months[new Date().getMonth()],
-            year: new Date().getFullYear()
+        setModal({
+            open: true,
+            employee,
+            formData: {
+                additions: '',
+                deductions: '',
+                notes: '',
+                month:  months[new Date().getMonth()],
+                year: new Date().getFullYear()
+            }
         });
-        setOpenModal(true);
     };
 
     const handleCloseModal = () => {
-        setOpenModal(false);
-        setSelectedEmployee(null);
+        setModal(prev => ({
+            ...prev,
+            open: false,
+            employee: null
+        }));
+    };
+
+    const handleInputChange = (e) => {
+        const { name, value } = e.target;
+        setModal(prev => ({
+            ...prev,
+            formData: {
+                ...prev.formData,
+                [name]: value
+            }
+        }));
     };
 
     const handleSubmit = (event) => {
         event.preventDefault();
 
-        // Calculate total salary based on form data
-        const total = Number(selectedEmployee.basic_salary) + Number(selectedEmployee.salary_allowances) + Number(formData.additions) - Number(formData.deductions);
+        const { employee, formData } = modal;
+        const total = Number(employee.basic_salary) + Number(employee.salary_allowances) + Number(formData.additions) - Number(formData.deductions);
 
-        // Create a new payment object
         const newPayment = {
-            staff_id: selectedEmployee.staff_id,
-            full_name: selectedEmployee.first_name + ' ' + selectedEmployee.last_name,
-            basic_salary: selectedEmployee.basic_salary,
-            salary_allowances: selectedEmployee.salary_allowances,
+            staff_id: employee.staff_id,
+            full_name: `${employee.first_name} ${employee.last_name}`,
+            basic_salary: employee.basic_salary,
+            salary_allowances: employee.salary_allowances,
             additions: formData.additions,
             deductions: formData.deductions,
             total: total.toFixed(2),
@@ -103,21 +102,17 @@ export default function Overview() {
             year: formData.year
         };
 
-        // Use SalariesService to handle the submission
         const result = salariesService.savePayment(newPayment);
 
-        setSnackbarState({
-            ...snackbarState,
+        setSnackbar({
             open: true,
-            message: result.message
+            message: result.message,
+            autoHideDuration: 5000
         });
 
-        if (result.success){
-            // Optionally close the modal
-            setOpenModal(false);
-            setSelectedEmployee(null);
+        if (result.success) {
+            handleCloseModal();
         }
-
     };
 
     const columns = [
@@ -140,24 +135,22 @@ export default function Overview() {
                 </Paper>
             </Grid>
 
-            {selectedEmployee && (
+            {modal.open && (
                 <ProcessSalaryModal
-                    open={openModal}
+                    open={modal.open}
                     handleClose={handleCloseModal}
                     onSubmit={handleSubmit}
-                    employee={selectedEmployee}
+                    employee={modal.employee}
                     onInputChange={handleInputChange}
-                    formData={formData}
+                    formData={modal.formData}
                 />
             )}
 
             <Snackbar
-                anchorOrigin={snackbarState.anchorOrigin}
-                open={snackbarState.open}
-                message={snackbarState.message}
-                key={snackbarState.anchorOrigin.vertical + snackbarState.anchorOrigin.horizontal}
-                autoHideDuration={snackbarState.autoHideDuration}
-                onClose={handleCloseSnackbar}
+                open={snackbar.open}
+                message={snackbar.message}
+                autoHideDuration={snackbar.autoHideDuration}
+                onClose={() => setSnackbar(prev => ({ ...prev, open: false }))}
             />
         </Grid>
     );
