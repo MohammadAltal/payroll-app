@@ -2,42 +2,11 @@ import * as React from 'react';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-import DashboardIcon from '@mui/icons-material/Dashboard';
-import PeopleIcon from '@mui/icons-material/People';
-import BarChartIcon from '@mui/icons-material/BarChart';
 import { useNavigate, useLocation } from 'react-router-dom';
 import Collapse from '@mui/material/Collapse';
 import ExpandLess from '@mui/icons-material/ExpandLess';
 import ExpandMore from '@mui/icons-material/ExpandMore';
 import List from '@mui/material/List';
-
-// Configuration for navigation items
-const navConfig = [
-    {
-        title: 'Home',
-        icon: <DashboardIcon />,
-        path: '/home',
-        subItems: []
-    },
-    {
-        title: 'Employees',
-        icon: <PeopleIcon />,
-        path: '/employees',
-        subItems: [
-            { text: 'Overview', path: '/employees' },
-            { text: 'Create', path: '/employees/create' }
-        ]
-    },
-    {
-        title: 'Salaries',
-        icon: <BarChartIcon />,
-        path: '/salaries',
-        subItems: [
-            { text: 'Overview', path: '/salaries' },
-            { text: 'Payment History', path: '/salaries/payments' }
-        ]
-    }
-];
 
 const NavigationItem = ({ icon, primary, onClick, endIcon, selected }) => (
     <ListItemButton onClick={onClick} selected={selected}>
@@ -85,7 +54,7 @@ const CollapsibleList = ({ title, items, isOpen, onToggle, navigate, location, i
     );
 };
 
-export default function SideBar() {
+export default function SideBar({ routes }) {
     const navigate = useNavigate();
     const location = useLocation();
     const [openSections, setOpenSections] = React.useState({});
@@ -95,7 +64,7 @@ export default function SideBar() {
         const path = location.pathname;
         const updatedSections = {};
 
-        navConfig.forEach(section => {
+        routes.forEach(section => {
             if (path.startsWith(section.path)) {
                 updatedSections[section.title] = true;
             }
@@ -113,7 +82,7 @@ export default function SideBar() {
 
     return (
         <>
-            {navConfig.map(section => (
+            {routes.map(section => (
                 <CollapsibleList
                     key={section.title}
                     title={section.title}
