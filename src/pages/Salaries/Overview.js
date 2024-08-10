@@ -42,12 +42,6 @@ export default function Overview() {
 
     return (
         <Grid container spacing={2}>
-            <Grid item xs={12}>
-                <Item>
-                    <Typography variant="h3">{employees.length}</Typography>
-                    <Typography variant="subtitle2">Employees</Typography>
-                </Item>
-            </Grid>
 
             <Grid item xs={12}>
                 <Paper sx={{ p: 2, display: 'flex', flexDirection: 'column' }}>
