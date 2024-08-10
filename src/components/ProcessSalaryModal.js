@@ -165,8 +165,6 @@ export default function ProcessSalaryModal({ open, handleClose, onSubmit, employ
                         </Grid>
                     </FormGrid>
                 </Grid>
-
-
             </Box>
         </Modal>
     );
