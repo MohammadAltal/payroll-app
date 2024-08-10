@@ -52,6 +52,11 @@ class EmployeesService {
     }
 
     updateEmployeeById(id, updatedEmployee) {
+        const check = this.getEmployeeByStaffId(updatedEmployee.staff_id);
+        if (check && check.id != updatedEmployee.id){
+            return { status: false, message: 'Staff ID already used!' };
+        }
+
         const employees = this.getAllEmployees();
         const updatedEmployees = employees.map(employee =>
             employee.id == id ? { ...employee, ...updatedEmployee } : employee

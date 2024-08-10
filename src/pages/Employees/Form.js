@@ -60,7 +60,18 @@ export default function Form() {
         const formattedJoiningDate = formData.joining_date.format('YYYY/MM/DD');
 
         if (isEditing){
-            employeesService.updateEmployeeById(id,{ ...formData, joining_date: formattedJoiningDate });
+            const  updatedEmployee = employeesService.updateEmployeeById(id,{ ...formData, joining_date: formattedJoiningDate });
+            if (!updatedEmployee.status){
+                setSnackbar(prev => ({
+                    ...prev,
+                    open: true,
+                    message: updatedEmployee.message,
+                    autoHideDuration: 5000
+                }));
+
+                return;
+            }
+
         } else {
            const  addedEmployee = employeesService.saveEmployee({ ...formData, joining_date: formattedJoiningDate });
 
